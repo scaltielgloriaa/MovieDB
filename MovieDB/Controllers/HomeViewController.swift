@@ -7,6 +7,13 @@
 
 import UIKit
 
+enum Sections: Int {
+    case Popular = 0
+    case Upcoming = 1
+    case TopRated = 2
+    case NowPlaying = 3
+}
+
 class HomeViewController: UIViewController {
     
     // MARK: Variables
@@ -23,20 +30,16 @@ class HomeViewController: UIViewController {
         view.addSubview(homeTableView)
         homeTableView.delegate = self
         homeTableView.dataSource = self
-        configureNavbar()
+        title = "Movie Library"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationItem.largeTitleDisplayMode = .always
     }
-    private func configureNavbar() {
-        let label = UILabel()
-        label.text = "Movie Library"
-        label.font = UIFont(name:"Avenir-Heavy", size: 30.0)
-        navigationItem.titleView = label
-    }
-    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         homeTableView.frame = view.bounds
     }
+
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -54,6 +57,53 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.identifier, for: indexPath) as? MoviesTableViewCell else {
             return UITableViewCell()
         }
+        cell.delegate = self
+
+        switch indexPath.section {
+        case Sections.Popular.rawValue:
+            RequestAPI.shared.getPopularMovies { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.Upcoming.rawValue:
+            
+            RequestAPI.shared.getUpcomingMovies { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+            
+        case Sections.TopRated.rawValue:
+            RequestAPI.shared.getTopRated { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+            
+        case Sections.NowPlaying.rawValue:
+            RequestAPI.shared.getNowPlaying { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        default:
+            return UITableViewCell()
+
+        }
+        
         
         return cell
     }
@@ -85,4 +135,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
     }
+}
+extension HomeViewController: MoviesTableViewCellDelegate {
+    func moviesTableViewCellCellTapped(_ cell: MoviesTableViewCell, viewModel: DetailViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            let vc = DetailViewController()
+            vc.configure(with: viewModel)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
 }
