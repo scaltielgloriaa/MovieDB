@@ -11,5 +11,5 @@ struct MoviesViewModel {
     let titleName: String
     let posterURL: String
     let titleOverview: String
-    let releaseDate : String
+    let releaseDate: String
 }

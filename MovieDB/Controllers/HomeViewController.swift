@@ -4,6 +4,7 @@
 //
 //  Created by Scaltiel Gloria on 09/03/22.
 //
+// swiftlint:disable identifier_name cyclomatic_complexity line_length colon
 
 import UIKit
 
@@ -15,9 +16,8 @@ enum Sections: Int {
 }
 
 class HomeViewController: UIViewController {
-    
     // MARK: Variables
-    let titles: [String] = ["Popular","Upcoming","Top Rated","Now Playing"]
+    let titles: [String] = ["Popular", "Upcoming", "Top Rated", "Now Playing"]
     private let homeTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.register(MoviesTableViewCell.self, forCellReuseIdentifier: MoviesTableViewCell.identifier)
@@ -34,7 +34,6 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.largeTitleDisplayMode = .always
     }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         homeTableView.frame = view.bounds
@@ -43,17 +42,13 @@ class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func numberOfSections(in tableView: UITableView) -> Int {
          return titles.count
     }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.identifier, for: indexPath) as? MoviesTableViewCell else {
             return UITableViewCell()
         }
@@ -70,7 +65,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case Sections.Upcoming.rawValue:
-            
             RequestAPI.shared.getUpcomingMovies { result in
                 switch result {
                 case .success(let titles):
@@ -79,7 +73,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     print(error.localizedDescription)
                 }
             }
-            
         case Sections.TopRated.rawValue:
             RequestAPI.shared.getTopRated { result in
                 switch result {
@@ -89,7 +82,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     print(error)
                 }
             }
-            
         case Sections.NowPlaying.rawValue:
             RequestAPI.shared.getNowPlaying { result in
                 switch result {
@@ -103,20 +95,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
 
         }
-        
-        
         return cell
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 200
     }
-    
-    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
-    
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else {return}
         header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -128,11 +114,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return titles[section]
     }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let defaultOffset = view.safeAreaInsets.top
         let offset = scrollView.contentOffset.y + defaultOffset
-        
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
     }
 }

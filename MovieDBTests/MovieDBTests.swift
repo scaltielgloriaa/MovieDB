@@ -4,6 +4,7 @@
 //
 //  Created by Scaltiel Gloria on 09/03/22.
 //
+// swiftlint:disable line_length
 
 import XCTest
 @testable import MovieDB
@@ -22,11 +23,6 @@ class MovieDBTests: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
     }
 
     func testPerformanceExample() throws {
@@ -56,7 +52,6 @@ class MovieDBTests: XCTestCase {
       XCTAssertNil(responseError)
       XCTAssertEqual(statusCode, 200)
     }
-    
     func testApiCallForUpcomingMovieCompletes() throws {
       // given
       let urlString = "https://api.themoviedb.org/3/movie/upcoming?api_key=087dd0d5809e9649a366b7e04f7e658b&language=en-US&page=1"
@@ -78,7 +73,6 @@ class MovieDBTests: XCTestCase {
       XCTAssertNil(responseError)
       XCTAssertEqual(statusCode, 200)
     }
-    
     func testApiCallForTopRatedMovieCompletes() throws {
       // given
       let urlString = "https://api.themoviedb.org/3/movie/top_rated?api_key=087dd0d5809e9649a366b7e04f7e658b&language=en-US&page=1"
@@ -100,7 +94,6 @@ class MovieDBTests: XCTestCase {
       XCTAssertNil(responseError)
       XCTAssertEqual(statusCode, 200)
     }
-    
     func testApiCallForNowPlayingMovieCompletes() throws {
       // given
       let urlString = "https://api.themoviedb.org/3/movie/now_playing?api_key=087dd0d5809e9649a366b7e04f7e658b&language=en-US&page=1"

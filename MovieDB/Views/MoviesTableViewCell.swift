@@ -4,6 +4,7 @@
 //
 //  Created by Scaltiel Gloria on 10/03/22.
 //
+// swiftlint:disable line_length empty_enum_arguments
 
 import UIKit
 
@@ -12,11 +13,9 @@ protocol MoviesTableViewCellDelegate: AnyObject {
 }
 
 class MoviesTableViewCell: UITableViewCell {
-    
     static let identifier = "MoviesTableViewCell"
     private var titles: [Movies] = [Movies]()
     weak var delegate: MoviesTableViewCellDelegate?
-    
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 140, height: 200)
@@ -30,15 +29,12 @@ class MoviesTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .systemBlue
         contentView.addSubview(collectionView)
-        
         collectionView.delegate = self
         collectionView.dataSource = self
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         collectionView.frame = contentView.bounds
@@ -50,8 +46,6 @@ class MoviesTableViewCell: UITableViewCell {
         }
     }
     public func favoriteMovies(indexPath: IndexPath) {
-        
-
         DataPersistenceManager.shared.favoriteTapped(model: titles[indexPath.row]) { result in
             switch result {
             case .success():
@@ -61,58 +55,35 @@ class MoviesTableViewCell: UITableViewCell {
                 print(error.localizedDescription)
             }
         }
-        
-
     }
-
-    
 }
 
 extension MoviesTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviesCollectionViewCell.identifier, for: indexPath) as? MoviesCollectionViewCell else {
             return UICollectionViewCell()
         }
-        
         guard let model = titles[indexPath.row].poster_path else {
             return UICollectionViewCell()
         }
         cell.configure(with: model)
-        // cell.accessoryty
-//        let heartButton = UIButton(type: .system)
-//        heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
-//        heartButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-//        heartButton.tintColor = .red
-//        heartButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
-//        accessoryView = heartButton
-        
-
-        
         return cell
     }
-//    @objc func favoriteTapped() {
-//        print("tapped")
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return titles.count
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        
         let title = titles[indexPath.row]
         guard let titleName = title.original_title ?? title.original_name else {
             return
         }
         let voteCount = String(title.vote_count)
         let voteAverage = String(title.vote_average)
-        
-        let viewModel = DetailViewModel(title: titleName, imageURL: title.poster_path ?? ""  , titleOverview: title.overview ?? "", releaseDate: title.release_date ?? "", voteCount: voteCount , voteAverage: voteAverage )
+        let viewModel = DetailViewModel(title: titleName, imageURL: title.poster_path ?? "", titleOverview: title.overview ?? "", releaseDate: title.release_date ?? "", voteCount: voteCount, voteAverage: voteAverage )
         delegate?.moviesTableViewCellCellTapped(self, viewModel: viewModel)
     }
-    
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 
         let configuratrion = UIContextMenuConfiguration(
@@ -126,5 +97,4 @@ extension MoviesTableViewCell: UICollectionViewDelegate, UICollectionViewDataSou
 
         return configuratrion
     }
-    
 }

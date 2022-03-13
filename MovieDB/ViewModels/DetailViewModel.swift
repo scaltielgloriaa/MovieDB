@@ -11,7 +11,7 @@ struct DetailViewModel {
     let title: String
     let imageURL: String
     let titleOverview: String
-    let releaseDate : String
+    let releaseDate: String
     let voteCount: String
     let voteAverage: String
 }
